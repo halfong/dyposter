@@ -5,7 +5,7 @@ Generate image using browser canvas by data from **Data URL**. Just static files
 
 Just visit the index.html with ```?d={ DATA URL }```. [See Example →](https://hal-f.cn/lab/dyposter?)
 
-The **DATA URL** should accept GET request publicly and return a **Dyposter Object** to be drawed.
+The **DATA URL** should accept GET request properly and return a **Dyposter Object** to be drawed.
 
 
 # Dyposter Object
@@ -14,7 +14,8 @@ Dyposter use fabricjs to do canvas works, see to document: [http://fabricjs.com/
 
 > For current version, objects only support types 'textbox' and 'image'.
 
-```json
+```js
+// The DATA URL should response json like this:
 {
   "config": {
     "width": 1125,
@@ -22,7 +23,6 @@ Dyposter use fabricjs to do canvas works, see to document: [http://fabricjs.com/
     "backgroundColor": "#22d3ee"
     // ... fabric.Canvas options
     },
-  // For 
   "objects": [
     { "type": "image",
       "mode": "cover",
