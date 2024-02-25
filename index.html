@@ -4,21 +4,35 @@
   <title>海报</title>
   <meta charset="utf-8">
   <style type="text/css">
-    body {
-      background: #f4f4f4;
-      padding-top: 6vh;
+    html,body {
+      padding: 0; margin: 0; background: #313131;
+      font-family: Arial, Helvetica, sans-serif;
+      /* padding-top: 6vh; */
     }
 
     .center {
       text-align: center;
       margin: 0 auto;
     }
+
+    /* @media screen and (orientation: landscape) {
+      width: ;
+    }
+    @media screen and (orientation: portrait) {
+        
+    } */
   </style>
 </head>
 
 <body>
-  <div id="dyposter" class="center" style="width:88vw;height:88vw;background:#fff;overflow: visible;"></div>
-  <p class="center" style="padding-top:60px;font-size:4vw;line-height:5vw;color:#666;">长按保存到手机相册</p>
+  <!-- <header style="position:fixed; left:0; top: 0; background: #a3e635; padding: .6em 1em; border-radius: 0 0 2rem 0; ">
+    <h1 style="font-size: 20px; display: inline-block; margin-right: 10px;">Dyposter</h1>
+    <p style="color:#313131; display: inline-block; ">长按/右击图片下载保存</p>
+  </header> -->
+  <!-- screen view port center then image -->
+  <div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; align-items: center; justify-content: center;">
+    <div id="dyposter" class="center" style="background:#fff;overflow: visible; "></div>
+  </div>
 </body>
 <script type="application/javascript" src="./lib/zepto.min.js"></script>
 <script type="application/javascript" src="./lib/fabric.min.js"></script>
@@ -26,13 +40,39 @@
 <script type="application/javascript">
 
   const exampleData = {
-    "config": { "width": 1125, "height": 1800, "backgroundColor": "#CCC" },
+    "config": { "width": 1125, "height": 1800, "backgroundColor": "#22d3ee" },
     "objects": [
       // { "type": "image", "mode": "cover", "top": 60, "left": 60, "width": 1005, "height": 1005, "centeredScaling": true, "crossOrigin": "anonymous", "src": "https:\/\/bluedge.oss-cn-shenzhen.aliyuncs.com\/static\/shop_cover_default.jpg" },
       // { "type": "image", "top": 0, "left": 0, "width": 1125, "height": 1800, "crossOrigin": "anonymous", "src": "https:\/\/bluedge.oss-cn-shenzhen.aliyuncs.com\/static\/poster-bg.png" },
-      { "type": "textbox", "top": 1116, "left": 120, "width": 495, "fontSize": "72", "fontWeight": "400", "splitByGrapheme": true, "text": "\u6cf8\u6cbd\u6e56\u65e0\u6240\u5c0f\u4f4f\u7684\u65c5\u884c\u6536\u85cf" },
-      { "type": "textbox", "top": 1116, "left": 120, "width": 495, "fontSize": "72", "fontWeight": "400", "splitByGrapheme": true, "text": "\u6cf8\u6cbd\u6e56\u65e0\u6240\u5c0f\u4f4f\u7684\u65c5\u884c\u6536\u85cf" },
-      // { "type": "image", "mode": "cover", "top": 1116, "left": 645, "width": 360, "height": 360, "crossOrigin": "anonymous", "src": "https:\/\/bluedge.oss-cn-shenzhen.aliyuncs.com\/ticket\/wxappQrcode\/blank\/forever\/1c73795e269a46bf99ecbf3b1b8cbe31.png" }
+      {
+        "type": "textbox",
+        "text": "No Data Url",
+        "fontFamily":'Arial',
+        "top": 300, "left": 0, "width": 1125, "fontSize": 120, "fontWeight": 400,
+        "textAlign":"center",
+        "splitByGrapheme": true,
+      },
+      {
+        "type": "textbox",
+        "text": window.location.href + '?d=[Data Url]',
+        "fontFamily":'Arial',
+        "top": 600, "left": 100, "width": 925, "fontSize": 60, "fontWeight": 400,
+        "textAlign":"left",
+        "splitByGrapheme": true,
+      },
+      {
+        "type": "textbox",
+        "text": "The [Data Url] is an url accept GET request publicly and return a [Config Object], which will be drawed.",
+        "fontFamily":'Arial',
+        "top": 900, "left": 100, "width": 925, "fontSize": 60, "fontWeight": 400,
+        "textAlign":"left",
+        // "splitByGrapheme": true,
+      },
+      { "type": "image",
+        "mode": "cover",
+        "top": 1500, "left": 825, "width": 300, "height": 300,
+        "crossOrigin": "anonymous",
+        "src": "https://th.bing.com/th?q=Red+Emoji&w=120&h=120&c=1&rs=1&qlt=90&cb=1&dpr=2&pid=InlineBlock&mkt=en-US&cc=US&setlang=en&adlt=moderate&t=1&mw=247" }
     ]
 }
 
@@ -43,17 +83,33 @@
     return query
   }
 
+  const imageSize = 90 // means long border is 90vw/vh
+  function fitScreen( $ele, w, h ){
+    var width, height
+    const ratio =  w / h
+    const ratioScreen = window.innerWidth / window.innerHeight 
+    const isPortrait = window.innerWidth < window.innerHeight
+    if( ratio > ratioScreen ){
+      width = imageSize/100 * window.innerWidth
+      height = width / ratio
+    }else{
+      height = imageSize/100 * window.innerHeight
+      width = height * ratio
+    }
+    $ele.width(width)
+    $ele.height(height)
+  }
 
   const src = getUrlParams().d
-
   if (!src) {
-    // alert('没有数据源')
-    // http://fabricjs.com/fabric-intro-part-1#canvas
+    fitScreen( $('#dyposter'), exampleData.config.width, exampleData.config.height )
     const $poster = new Dyposter('dyposter', exampleData.config)
     $poster.draw(exampleData.objects)
   }
   else {
+    fitScreen( $('#dyposter'), exampleData.config.width, exampleData.config.height )
     $.get(src, function (data) {
+      fitScreen( $('#dyposter'), data.config.width, data.config.height )
       if (status > 300) return alert('数据源错误')
       const $poster = new Dyposter('dyposter', data.config)
       $poster.draw(data.objects)
