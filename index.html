@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>海报</title>
+  <title>Dyposter - Browser Image Generator</title>
   <meta charset="utf-8">
   <style type="text/css">
     html,body {
@@ -39,7 +39,7 @@
 <script type="application/javascript" src="./dyposter.js"></script>
 <script type="application/javascript">
 
-  const exampleData = {
+  const defaultData = {
     "config": { "width": 1125, "height": 1800, "backgroundColor": "#22d3ee" },
     "objects": [
       // { "type": "image", "mode": "cover", "top": 60, "left": 60, "width": 1005, "height": 1005, "centeredScaling": true, "crossOrigin": "anonymous", "src": "https:\/\/bluedge.oss-cn-shenzhen.aliyuncs.com\/static\/shop_cover_default.jpg" },
@@ -74,7 +74,7 @@
         "crossOrigin": "anonymous",
         "src": "https://th.bing.com/th?q=Red+Emoji&w=120&h=120&c=1&rs=1&qlt=90&cb=1&dpr=2&pid=InlineBlock&mkt=en-US&cc=US&setlang=en&adlt=moderate&t=1&mw=247" }
     ]
-}
+  }
 
   function getUrlParams() {
     const query = {}
@@ -100,21 +100,17 @@
     $ele.height(height)
   }
 
+  function run(data){
+    fitScreen( $('#dyposter'), data.config.width, data.config.height )
+    const $poster = new Dyposter('dyposter', data.config)
+    $poster.draw(data.objects)
+  }
   const src = getUrlParams().d
-  if (!src) {
-    fitScreen( $('#dyposter'), exampleData.config.width, exampleData.config.height )
-    const $poster = new Dyposter('dyposter', exampleData.config)
-    $poster.draw(exampleData.objects)
-  }
-  else {
-    fitScreen( $('#dyposter'), exampleData.config.width, exampleData.config.height )
-    $.get(src, function (data) {
-      fitScreen( $('#dyposter'), data.config.width, data.config.height )
-      if (status > 300) return alert('数据源错误')
-      const $poster = new Dyposter('dyposter', data.config)
-      $poster.draw(data.objects)
-    })
-  }
+  if( !src ) run(defaultData)
+  else $.get( src, function (data) {
+    if (status > 300) return alert('DATA URL ERROR')
+    run(data)
+  })
 
 </script>
 
