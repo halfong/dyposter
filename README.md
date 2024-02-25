@@ -3,7 +3,9 @@ Generate image using browser canvas by data from **Data URL**. Just static files
 
 # Usage
 
-Just visit the index.html with ```?d={ DATA URL }```. [See Example →](https://hal-f.cn/lab/dyposter?https://hal-f.cn/lab/dyposter/example.json)
+Just visit the index.html with ```?d={ DATA URL }```.
+
+See Example: [https://hal-f.cn/lab/dyposter?d=https://hal-f.cn/lab/dyposter/example.json](https://hal-f.cn/lab/dyposter?d=https://hal-f.cn/lab/dyposter/example.json)
 
 The **DATA URL** should accept GET request properly and return a **Dyposter Object** to be drawed.
 
